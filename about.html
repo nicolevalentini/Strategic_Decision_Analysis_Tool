@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Is This Tool For & How It Works - Strategic Decision Analysis</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --warning: #ef4444;
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --border: #e5e7eb;
+      --border-light: #f3f4f6;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --example-bg: #f3f4f6;
+      --example-text: #6b7280;
+      --example-border: #d1d5db;
+    }
+    
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: #475569;
+      --border-light: #374151;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      --example-bg: #374151;
+      --example-text: #9ca3af;
+      --example-border: #4b5563;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      transition: all 0.3s ease;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .subtitle {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      max-width: 900px;
+      margin: 0 auto;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 0.875rem;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.25rem;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.1);
+    }
+
+    .back-link {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 0.875rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-link:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 1rem;
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      margin-bottom: 3rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .subsection-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2.5rem 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .user-group {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 2px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .user-group::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .user-group:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary);
+    }
+
+    .user-group h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-group ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .user-group li {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .user-group li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .method-detail {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin: 2rem 0;
+      border: 2px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .method-detail::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .method-detail.expected-value::before {
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    .method-detail.risk-assessment::before {
+      background: linear-gradient(90deg, var(--secondary), #34d399);
+    }
+
+    .method-detail.sensitivity::before {
+      background: linear-gradient(90deg, var(--accent), #fbbf24);
+    }
+
+    .method-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .method-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+    }
+
+    .method-detail.expected-value .method-icon {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    }
+
+    .method-detail.risk-assessment .method-icon {
+      background: linear-gradient(135deg, var(--secondary), #34d399);
+    }
+
+    .method-detail.sensitivity .method-icon {
+      background: linear-gradient(135deg, var(--accent), #fbbf24);
+    }
+
+    .method-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .formula-box {
+      background: var(--example-bg);
+      border: 2px solid var(--example-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      color: var(--example-text);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .example-box {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #f59e0b;
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 2rem 0;
+      color: #92400e;
+    }
+
+    [data-theme="dark"] .example-box {
+      background: linear-gradient(135deg, #451a03, #78350f);
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    .example-box h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .scenario-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .scenario-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .scenario-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .scenario-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .highlight-text {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .key-benefits {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border: 2px solid #10b981;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin: 2rem 0;
+      color: #065f46;
+    }
+
+    [data-theme="dark"] .key-benefits {
+      background: linear-gradient(135deg, #064e3b, #065f46);
+      color: #6ee7b7;
+      border-color: #10b981;
+    }
+
+    .key-benefits h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .benefits-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+    }
+
+    .benefit-icon {
+      color: #10b981;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 0.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .section {
+        padding: 2rem;
+      }
+      
+      .user-groups {
+        grid-template-columns: 1fr;
+      }
+      
+      .scenario-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .benefits-list {
+        grid-template-columns: 1fr;
+      }
+
+      .back-link {
+        position: static;
+        margin: 1rem;
+        width: fit-content;
+      }
+
+      .theme-toggle {
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+  <a href="index.html" class="back-link">← Back to Tool</a>
+  
+  <div class="header">
+    <h1>Who Is This Tool For & How It Works</h1>
+    <p class="subtitle">
+      Understanding when and how to use strategic decision analysis for better outcomes
+    </p>
+  </div>
+
+  <div class="container">
+    <!-- Who Is This Tool For Section -->
+    <div class="section fade-in">
+      <h2 class="section-title">Who Finds This Tool Most Useful?</h2>
+      
+      <p style="font-size: 1.2rem; text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+        This decision analysis tool is designed for anyone facing <span class="highlight-text">complex choices with uncertain outcomes</span>. 
+        It's particularly valuable when you need to compare multiple options that have different risks, benefits, and probabilities of success.
+      </p>
+
+      <div class="user-groups">
+        <div class="user-group">
+          <h3>🏢 Business Leaders</h3>
+          <ul>
+            <li>Startup founders allocating limited resources</li>
+            <li>Product managers prioritizing features</li>
+            <li>Marketing directors choosing campaign strategies</li>
+            <li>Investment committees evaluating opportunities</li>
+            <li>Small business owners planning expansion</li>
+          </ul>
+        </div>
+
+        <div class="user-group">
+          <h3>🏛️ Non-Profit & Public Sector</h3>
+          <ul>
+            <li>Non-profit leaders maximizing program impact</li>
+            <li>Grant committees allocating funding</li>
+            <li>Public policy analysts comparing interventions</li>
+            <li>Healthcare administrators planning initiatives</li>
+            <li>Education leaders evaluating curriculum changes</li>
+          </ul>
+        </div>
+
+        <div class="user-group">
+          <h3>👤 Personal Decision Makers</h3>
+          <ul>
+            <li>Career changers weighing job opportunities</li>
+            <li>Investors comparing investment strategies</li>
+            <li>Home buyers evaluating properties</li>
+            <li>Students choosing educational programs</li>
+            <li>Retirees planning financial strategies</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="key-benefits">
+        <h3>Key Benefits of Using This Tool</h3>
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Reduces bias:</strong> Forces you to think systematically about probabilities and outcomes</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Handles complexity:</strong> Compares options with multiple uncertain outcomes</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Tests assumptions:</strong> Shows which estimates matter most to your decision</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Balances risk:</strong> Helps you understand trade-offs between safety and potential rewards</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Improves communication:</strong> Provides clear rationale for your decisions</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span><strong>Saves time:</strong> Prevents endless debate by providing objective analysis</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Perfect For These Scenarios</h3>
+      <div class="scenario-grid">
+        <div class="scenario-card">
+          <h4>High-Stakes Decisions</h4>
+          <p>When the consequences of being wrong are significant and you need to be confident in your choice.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Resource Constraints</h4>
+          <p>When you can't pursue all options and need to prioritize where to invest time, money, or effort.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Multiple Uncertain Outcomes</h4>
+          <p>When each option could lead to several different results with varying probabilities.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Competing Priorities</h4>
+          <p>When different stakeholders value different outcomes, and you need to balance their interests.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Risk vs. Reward Trade-offs</h4>
+          <p>When you need to decide between "safe bets" and "high-risk, high-reward" options.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Team Decision Making</h4>
+          <p>When you need to justify decisions to others or get team alignment on the best path forward.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="section fade-in">
+      <h2 class="section-title">How the Three Methods Work</h2>
+      
+      <p style="font-size: 1.2rem; text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+        Our tool uses three complementary analysis methods that together give you a complete picture of your decision. 
+        Each method answers a different crucial question about your options.
+      </p>
+
+      <!-- Expected Value -->
+      <div class="method-detail expected-value">
+        <div class="method-header">
+          <div class="method-icon">📊</div>
+          <h3 class="method-title">Expected Value Analysis</h3>
+        </div>
+        
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+          <strong>What it answers:</strong> "Which option is likely to give me the best results on average?"
+        </p>
+        
+        <p>
+          Expected Value calculates the weighted average of all possible outcomes for each option. It considers not just what might happen, 
+          but how likely each outcome is and how much you care about it. This gives you a single number that represents the "expected" 
+          result if you could repeat this decision many times.
+        </p>
+
+        <div class="formula-box">
+          Expected Value = Σ (Impact × Probability × Importance)
+        </div>
+
+        <div class="example-box">
+          <h4>💡 Example: Choosing a Marketing Strategy</h4>
+          <p><strong>Option A - Social Media Campaign:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>Moderate reach (Impact: 6) × Very likely (Probability: 0.8) × Important (Importance: 7) = 33.6</li>
+            <li>Some new customers (Impact: 5) × Likely (Probability: 0.7) × Important (Importance: 8) = 28.0</li>
+            <li><strong>Total Expected Value: 61.6</strong></li>
+          </ul>
+          
+          <p><strong>Option B - TV Advertisement:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>Wide reach (Impact: 9) × Uncertain (Probability: 0.4) × Very important (Importance: 9) = 32.4</li>
+            <li>High cost (Impact: -7) × Certain (Probability: 1.0) × Important (Importance: 6) = -42.0</li>
+            <li><strong>Total Expected Value: -9.6</strong></li>
+          </ul>
+          
+          <p><strong>Result:</strong> Social media campaign has higher expected value, making it the better choice on average.</p>
+        </div>
+
+        <p>
+          <strong>When to trust Expected Value:</strong> When you're making similar decisions repeatedly, when you can afford 
+          average outcomes, or when you want to maximize long-term results. Be cautious when you can't afford a bad outcome 
+          even if the average is good.
+        </p>
+      </div>
+
+      <!-- Risk Assessment -->
+      <div class="method-detail risk-assessment">
+        <div class="method-header">
+          <div class="method-icon">⚖️</div>
+          <h3 class="method-title">Risk Assessment</h3>
+        </div>
+        
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+          <strong>What it answers:</strong> "How much uncertainty and variability does each option have?"
+        </p>
+        
+        <p>
+          Risk Assessment measures how spread out the possible outcomes are for each option. A "low-risk" option has outcomes 
+          that are all fairly similar - you know roughly what to expect. A "high-risk" option might lead to either spectacular 
+          success or significant failure. This helps you understand the trade-off between predictability and potential upside.
+        </p>
+
+        <div class="formula-box">
+          Risk = √(Variance of all possible outcome values)
+        </div>
+
+        <div class="example-box">
+          <h4>⚖️ Example: Investment Choices</h4>
+          <p><strong>Option A - Government Bonds:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>Guaranteed 3% return (Impact: 3) × Certain (Probability: 1.0) = 3.0</li>
+            <li>All outcomes are similar → <strong>Low Risk (0.2)</strong></li>
+          </ul>
+          
+          <p><strong>Option B - Startup Investment:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>10x return (Impact: 100) × Unlikely (Probability: 0.1) = 10.0</li>
+            <li>Total loss (Impact: -10) × Likely (Probability: 0.7) = -7.0</li>
+            <li>Outcomes vary wildly → <strong>High Risk (8.5)</strong></li>
+          </ul>
+          
+          <p><strong>Result:</strong> Bonds are predictable but limited upside; startup investment is unpredictable but high potential.</p>
+        </div>
+
+        <p>
+          <strong>When to prefer low risk:</strong> When you have limited resources, can't afford failure, or need predictable outcomes. 
+          <strong>When to accept high risk:</strong> When you can afford to lose, have multiple opportunities, or need breakthrough results.
+        </p>
+      </div>
+
+      <!-- Sensitivity Analysis -->
+      <div class="method-detail sensitivity">
+        <div class="method-header">
+          <div class="method-icon">🔍</div>
+          <h3 class="method-title">Sensitivity Analysis</h3>
+        </div>
+        
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+          <strong>What it answers:</strong> "Which of my assumptions matter most, and what if I'm wrong about them?"
+        </p>
+        
+        <p>
+          Sensitivity Analysis tests how much your decision would change if your estimates were different. It shows which 
+          assumptions are "critical" (small changes flip your decision) versus "robust" (large changes don't matter much). 
+          This helps you identify where to spend more time researching and where you can be confident despite uncertainty.
+        </p>
+
+        <div class="formula-box">
+          Sensitivity = |Expected Value if 25% better - Expected Value if 25% worse|
+        </div>
+
+        <div class="example-box">
+          <h4>🔍 Example: Product Launch Decision</h4>
+          <p><strong>Option A - Quick Launch:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>Current estimate: Expected Value = 45</li>
+            <li>If 25% more optimistic: Expected Value = 52</li>
+            <li>If 25% more pessimistic: Expected Value = 38</li>
+            <li><strong>Sensitivity = |52 - 38| = 14 (Low)</strong></li>
+          </ul>
+          
+          <p><strong>Option B - Delayed Launch with More Features:</strong></p>
+          <ul style="margin: 1rem 0; padding-left: 2rem;">
+            <li>Current estimate: Expected Value = 48</li>
+            <li>If 25% more optimistic: Expected Value = 75</li>
+            <li>If 25% more pessimistic: Expected Value = 15</li>
+            <li><strong>Sensitivity = |75 - 15| = 60 (High)</strong></li>
+          </ul>
+          
+          <p><strong>Result:</strong> Quick launch is more robust to estimation errors; delayed launch depends heavily on your assumptions being correct.</p>
+        </div>
+
+        <p>
+          <strong>High sensitivity means:</strong> Your decision depends heavily on uncertain assumptions - do more research on these factors. 
+          <strong>Low sensitivity means:</strong> Your decision is robust even if your estimates are somewhat wrong - you can proceed with confidence.
+        </p>
+      </div>
+
+      <div class="key-benefits" style="margin-top: 3rem;">
+        <h3>Using All Three Together</h3>
+        <p style="margin-bottom: 1rem;">
+          The real power comes from using all three methods together. They often tell different parts of the story:
+        </p>
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <span class="benefit-icon">→</span>
+            <span><strong>Expected Value</strong> tells you which option is best "on average"</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">→</span>
+            <span><strong>Risk Assessment</strong> tells you how much uncertainty you're accepting</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">→</span>
+            <span><strong>Sensitivity Analysis</strong> tells you how confident you can be in your estimates</span>
+          </div>
+        </div>
+        <p style="margin-top: 1rem; font-style: italic;">
+          Sometimes the "best" option by expected value is too risky for your situation, or depends too heavily on optimistic assumptions. 
+          This comprehensive analysis helps you make decisions that fit your specific context and risk tolerance.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      
+      function setTheme(theme) {
+        if (theme === 'dark') {
+          document.body.setAttribute('data-theme', 'dark');
+          themeToggle.textContent = '☀️';
+        } else {
+          document.body.removeAttribute('data-theme');
+          themeToggle.textContent = '🌙';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+
+      themeToggle.addEventListener('click', function() {
+        const currentTheme = document.body.hasAttribute('data-theme') ? 'dark' : 'light';
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+
+      // Add fade-in animation to sections as they come into view
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.section').forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+</body>
+</html>

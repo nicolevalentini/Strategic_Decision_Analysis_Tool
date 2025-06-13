@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Decision Analysis Tool</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle dark or light theme">🌙</button>
+  
+  <div class="header">
+    <h1>Strategic Decision Analysis Tool</h1>
+    <p class="subtitle">
+      Make better decisions by comparing options using three powerful but simple methods: 
+      Expected Value, Risk Assessment, and Sensitivity Analysis.
+    </p>
+    <a href="about.html" class="header-link">📖 Who Is This Tool For & How It Works</a>
+  </div>
+
+  <div class="container">
+    <!-- How This Works Section -->
+    <div class="how-it-works">
+      <h2>How This Works</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">
+        This tool helps you make better decisions by analyzing your options in three ways:
+      </p>
+      
+      <div class="method-cards">
+        <div class="method-card expected-value">
+          <div class="method-icon" aria-label="Expected Value Icon">📊</div>
+          <h3>Expected Value</h3>
+          <p>Calculates which option is likely to give the best results on average by weighing impact, probability, and importance of each outcome.</p>
+        </div>
+        
+        <div class="method-card risk-assessment">
+          <div class="method-icon" aria-label="Risk Assessment Icon">⚖️</div>
+          <h3>Risk Assessment</h3>
+          <p>Shows which options are "safe bets" vs "high-risk, high-reward" by measuring the uncertainty and variance in potential outcomes.</p>
+        </div>
+        
+        <div class="method-card sensitivity">
+          <div class="method-icon" aria-label="Sensitivity Analysis Icon">🔍</div>
+          <h3>Sensitivity Analysis</h3>
+          <p>Tests which of your assumptions matter most to the final decision by showing how changes in estimates affect the results.</p>
+        </div>
+      </div>
+
+      <div class="example-highlight">
+        💡 <strong>e.g.</strong> Choosing between a social media campaign (predictable, lower impact) vs. a legal challenge (uncertain, but could create major change)
+        <ul style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 1rem;">
+          <li>Should we launch a legal challenge or focus on advocacy campaigns?</li>
+          <li>How do we allocate limited resources between direct aid and policy work?</li>
+          <li>Which partnership offers the best balance of impact and risk for our cause?</li>
+          <li>Should we prioritize urgent response or long-term capacity building?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <button class="tab-button active" data-tab="setup" aria-label="Setup Options Tab">Setup Options</button>
+        <button class="tab-button" data-tab="expected-value" aria-label="Expected Value Tab">Expected Value</button>
+        <button class="tab-button" data-tab="risk" aria-label="Risk Assessment Tab">Risk Assessment</button>
+        <button class="tab-button" data-tab="sensitivity" aria-label="Sensitivity Test Tab">Sensitivity Test</button>
+      </div>
+
+      <!-- Setup Tab -->
+      <div id="setup" class="tab-content active">
+        <div class="section-title">Setup Your Decision</div>
+        
+        <!-- Quick Guide -->
+        <div class="quick-guide">
+          <h3>🚀 Quick Start Guide</h3>
+          <ol>
+            <li>Add at least two options you're considering <span class="example-text">(e.g., "Launch new product" or "Expand to new market")</span></li>
+            <li>For each option, add possible outcomes with their impact, probability, and importance</li>
+            <li>Click "Analyze My Options" to see which choice is best</li>
+            <li>Review the results in the other tabs for deeper insights</li>
+          </ol>
+          <p><strong>Tip:</strong> The more detailed your options and outcomes, the better your analysis will be!</p>
+        </div>
+        
+        <div id="choicesList"></div>
+        
+        <div class="actions">
+          <button id="addChoiceBtn" class="btn btn-outline" aria-label="Add Option">➕ Add Option</button>
+        </div>
+        
+        <button id="analyzeBtn" class="btn btn-large" aria-label="Analyze My Options">🚀 Analyze My Options</button>
+      </div>
+
+      <!-- Expected Value Tab -->
+      <div id="expected-value" class="tab-content">
+        <div class="section-title">Expected Value Analysis</div>
+        
+        <div class="instruction-box">
+          <strong>What is Expected Value?</strong><br>
+          Expected Value calculates the "average" outcome you can expect from each option, considering both the impact and likelihood of different results.<br><br>
+          <strong>Formula:</strong> Impact × Probability × Importance, added up for all possible outcomes
+        </div>
+        
+        <div id="expectedValueResults">
+          <p>Add your options in the "Setup Options" tab first, then return here to see the results.</p>
+        </div>
+      </div>
+
+      <!-- Risk Assessment Tab -->
+      <div id="risk" class="tab-content">
+        <div class="section-title">Risk Assessment</div>
+        
+        <div class="instruction-box">
+          <strong>What is Risk Assessment?</strong><br>
+          Risk assessment measures how much uncertainty each option has. Some strategies are predictable (low risk), others could succeed greatly or fail completely (high risk).<br><br>
+          <strong>Why it matters:</strong> If you have limited resources, you might prefer a "safe bet" over a gamble, even if the gamble has higher expected value.
+        </div>
+        
+        <div id="riskResults">
+          <p>Add your options in the "Setup Options" tab first, then return here to see the risk analysis.</p>
+        </div>
+      </div>
+
+      <!-- Sensitivity Analysis Tab -->
+      <div id="sensitivity" class="tab-content">
+        <div class="section-title">Sensitivity Analysis</div>
+        
+        <div class="instruction-box">
+          <strong>What is Sensitivity Analysis?</strong><br>
+          Sensitivity analysis tests "what if your estimates are wrong?" It shows which assumptions are most critical to your decision.<br><br>
+          <strong>Why it matters:</strong> If a small change in one assumption completely flips your decision, you should research that factor more carefully before proceeding.
+        </div>
+        
+        <div id="sensitivityResults">
+          <p>Add your options in the "Setup Options" tab first, then return here to see which assumptions matter most.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Modal -->
+  <div id="resultsModal" class="modal-overlay">
+    <div class="modal">
+      <button class="close-modal" onclick="closeResults()" aria-label="Close results modal">×</button>
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">Analysis Results</h2>
+        <div id="resultSummary" style="background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #065f46; padding: 1.5rem; border-radius: var(--radius); font-size: 1.125rem; font-weight: 600; border: 1px solid #a7f3d0;"></div>
+      </div>
+      
+      <div class="chart-grid">
+        <div class="chart-container">
+          <div class="chart-title">Expected Value Comparison</div>
+          <canvas id="resultChart" style="max-height: 300px;"></canvas>
+        </div>
+        
+        <div class="chart-container">
+          <div class="chart-title">Risk vs Return</div>
+          <canvas id="riskChart" style="max-height: 300px;"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+          <h3 style="margin: 0; font-size: 1.25rem;">Sensitivity Analysis: What If Your Estimates Are Wrong?</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="sensitivityTable" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-secondary);">
+                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600;">Option</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600;">Current Estimate</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600;">If 25% Better</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600;">If 25% Worse</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600;">How Sensitive?</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+          <h3 style="margin: 0; font-size: 1.25rem;">Key Insights & Recommendations</h3>
+        </div>
+        <div id="insightsList" style="padding: 1.5rem;">
+          <!-- Insights will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Feedback Form -->
+      <div class="card" id="feedbackCard" style="margin-top: 2rem;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+          <h3 style="margin: 0; font-size: 1.25rem;">We Value Your Feedback</h3>
+        </div>
+        <form id="feedbackForm" action="https://formspree.io/f/xzzgekdo" method="POST" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+          <label for="starRating" style="font-weight: 600;">How would you rate your experience?</label>
+          <div id="starRating" style="font-size: 2rem; color: #f59e0b; display: flex; gap: 0.5rem; cursor: pointer;">
+            <span data-value="1" aria-label="1 star" tabindex="0">☆</span>
+            <span data-value="2" aria-label="2 stars" tabindex="0">☆</span>
+            <span data-value="3" aria-label="3 stars" tabindex="0">☆</span>
+            <span data-value="4" aria-label="4 stars" tabindex="0">☆</span>
+            <span data-value="5" aria-label="5 stars" tabindex="0">☆</span>
+          </div>
+          <input type="hidden" name="rating" id="ratingInput">
+          <label for="feedbackText" style="font-weight: 600;">Additional comments (optional):</label>
+          <textarea id="feedbackText" name="feedback" rows="3" placeholder="Your feedback..." style="resize: vertical; border-radius: var(--radius); border: 1px solid var(--border); padding: 1rem;"></textarea>
+          <button type="submit" class="btn btn-outline" style="align-self: flex-start;">Send Feedback</button>
+          <div id="feedbackThankYou" style="display:none; color: var(--secondary); font-weight: 600; margin-top: 1rem;">Thank you for your feedback! 💚</div>
+        </form>
+      </div>
+      
+      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+        <button id="copyBtn" class="btn btn-outline" aria-label="Copy results to clipboard">📋 Copy Results</button>
+        <button id="downloadBtn" class="btn" aria-label="Download analysis report">💾 Download Report</button>
+        <button id="exportPdfBtn" class="btn btn-outline" aria-label="Export as PDF">📝 Export as PDF</button>
+        <button id="exportExcelBtn" class="btn btn-outline" aria-label="Export as Excel">📊 Export as Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+  // Feedback star rating logic
+  const starRating = document.getElementById('starRating');
+  const ratingInput = document.getElementById('ratingInput');
+  if (starRating && ratingInput) {
+    let currentRating = 0;
+    const stars = starRating.querySelectorAll('span');
+    function setStars(rating) {
+      stars.forEach((star, idx) => {
+        star.textContent = idx < rating ? '★' : '☆';
+      });
+      ratingInput.value = rating;
+    }
+    stars.forEach((star, idx) => {
+      star.addEventListener('click', () => {
+        currentRating = idx + 1;
+        setStars(currentRating);
+      });
+      star.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          currentRating = idx + 1;
+          setStars(currentRating);
+        }
+      });
+    });
+  }
+  // Feedback form thank you message
+  const feedbackForm = document.getElementById('feedbackForm');
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(feedbackForm);
+      fetch(feedbackForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById('feedbackThankYou').style.display = 'block';
+          feedbackForm.reset();
+          setTimeout(() => {
+            document.getElementById('feedbackThankYou').style.display = 'none';
+          }, 4000);
+        } else {
+          alert('Sorry, there was a problem sending your feedback.');
+        }
+      })
+      .catch(() => {
+        alert('Sorry, there was a problem sending your feedback.');
+      });
+    });
+  }
+  // Export as PDF
+  const exportPdfBtn = document.getElementById('exportPdfBtn');
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener('click', function() {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert('PDF export library not loaded.');
+        return;
+      }
+      const doc = new window.jspdf.jsPDF();
+      let y = 10;
+      doc.setFontSize(18);
+      doc.text('Decision Analysis Results', 10, y);
+      y += 10;
+      if (window.analysisData) {
+        window.analysisData.forEach(r => {
+          doc.setFontSize(14);
+          doc.text(`Option: ${r.name}`, 10, y);
+          y += 8;
+          doc.setFontSize(12);
+          doc.text(`Expected Value: ${r.expectedValue.toFixed(2)}`, 12, y);
+          y += 6;
+          doc.text(`Risk: ${r.risk.toFixed(2)}`, 12, y);
+          y += 6;
+          doc.text(`Sensitivity: ${r.sensitivity.toFixed(2)}`, 12, y);
+          y += 10;
+          if (y > 270) { doc.addPage(); y = 10; }
+        });
+      }
+      doc.save('decision-analysis.pdf');
+    });
+  }
+  // Export as Excel
+  const exportExcelBtn = document.getElementById('exportExcelBtn');
+  if (exportExcelBtn) {
+    exportExcelBtn.addEventListener('click', function() {
+      if (!window.XLSX) {
+        alert('Excel export library not loaded.');
+        return;
+      }
+      if (!window.analysisData) {
+        alert('No analysis data to export.');
+        return;
+      }
+      const wsData = [
+        ['Option', 'Expected Value', 'Risk', 'Sensitivity']
+      ];
+      window.analysisData.forEach(r => {
+        wsData.push([
+          r.name,
+          r.expectedValue.toFixed(2),
+          r.risk.toFixed(2),
+          r.sensitivity.toFixed(2)
+        ]);
+      });
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Analysis');
+      XLSX.writeFile(wb, 'decision-analysis.xlsx');
+    });
+  }
+  </script>
+</body>
+</html>
