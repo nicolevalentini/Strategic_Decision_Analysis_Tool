@@ -116,4 +116,4 @@ Sensitivity:
 ---
 
 For more details, see the code in `script.js` (function: `analyzeChoices`). 
-Made by Nik with ❤️
+
