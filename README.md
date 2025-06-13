@@ -1,6 +1,6 @@
 # Strategic Decision Analysis Tool 
 
-![app-icon-512](https://github.com/user-attachments/assets/4e7db8a9-2e01-4752-8cf8-11f34b47ab94)
+![app-icon-64](https://github.com/user-attachments/assets/9b6cdcd6-e582-4aa3-8c2f-85ed99b85984)
 
 ## What is this app?
 
